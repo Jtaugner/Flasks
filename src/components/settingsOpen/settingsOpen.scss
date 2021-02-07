@@ -1,0 +1,16 @@
+.settingsOpen{
+  width: 40px;
+  height: 40px;
+
+  border-radius: 12px;
+
+  background: url(settingsOpen.png) center center no-repeat white;
+  background-size: 65%;
+}
+
+
+@media (min-width: 600px) {
+  .settingsOpen{
+    margin-left: 15px;
+  }
+}

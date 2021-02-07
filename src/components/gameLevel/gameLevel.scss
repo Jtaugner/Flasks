@@ -1,0 +1,22 @@
+.top-menu__level{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: #b56f56;
+  font-size: 1.5rem;
+
+  padding: 0 8px;
+  height: 35px;
+
+
+  background-color: white;
+  border-radius: 12px;
+}
+@media (min-width: 600px) {
+  .top-menu__level {
+    height: 55px;
+    font-size: 1.9rem;
+    padding: 0 15px;
+  }
+}

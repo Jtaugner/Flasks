@@ -1,0 +1,15 @@
+.menu {
+  display: block;
+  background: url(menu.png) center center no-repeat white;
+  background-size: 65%;
+  border-radius: 12px;
+}
+
+@media (min-width: 600px) {
+  .menu {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+/*# sourceMappingURL=menuLink.css.map */

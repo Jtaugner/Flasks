@@ -1,0 +1,60 @@
+@import '../../root';
+
+$moneyColor: #a95dbc;
+
+.moneyBlock{
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 80px;
+  height: 35px;
+  border-radius: 14px;
+
+  background-color: white;
+
+
+  text-align: center;
+  font-size: 1.6rem;
+  color: $darkFontColor;
+
+
+
+  cursor: pointer;
+}
+$leftShift: 7px;
+.moneyBlock__moneyAmount{
+  color: #b56c52;
+  margin-left: 7.5px;
+}
+.moneyBlock__moneyPic{
+
+  width: 15px;
+  height: 27px;
+
+  margin-left: 5px;
+
+  background: url(../../assets/images/money.png) center center no-repeat;
+  background-size: 100%;
+}
+
+@media (min-width: 600px) {
+  .moneyBlock{
+    width: 180px;
+    height: 55px;
+
+    font-size: 1.9rem;
+
+    margin-right: 20px;
+  }
+  .moneyBlock__moneyPic{
+    width: 24px;
+    height: 36px;
+    margin-right: $leftShift + 5px;
+  }
+}
+@media (min-width: 1000px) {
+
+}

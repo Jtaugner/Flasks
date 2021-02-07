@@ -1,0 +1,97 @@
+@import '../../root';
+
+.tips{
+  width: 100%;
+  height: 60px;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  padding-right: 10px;
+}
+
+.tip1{
+  width: 30px;
+  height: 40px;
+
+  background: url(tip1.png) center center no-repeat;
+}
+.tip2{
+  width: 40px;
+  height: 40px;
+
+  background: url(tip2.png) center center no-repeat;
+}
+.tip3{
+  width: 34px;
+  height: 40px;
+
+  background: url(tip3.png) center center no-repeat;
+}
+.tip4{
+  width: 20px;
+  height: 45px;
+  background: url(tip4.png) center center no-repeat;
+}
+
+
+.tip{
+  position: relative;
+  background-size: 100%;
+
+  cursor: pointer;
+}
+
+.tip__cost{
+  position: absolute;
+
+  bottom: -5px;
+  right: -8px;
+
+
+  color: white;
+  font-size: 1.4rem;
+
+}
+.tip__cost:after{
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 20px;
+  height: 20px;
+
+  background: url(../../assets/images/money.png) center center no-repeat;
+  background-size: 100%;
+
+}
+@media (min-width: 600px) {
+  .tips{
+    width: 600px;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+@media (min-height: 800px) {
+  .tips{
+    height: 70px;
+  }
+  .tip1{
+    width: 40px;
+    height: 53.3px;
+  }
+  .tip2{
+    width: 53.3px;
+    height: 53.3px;
+  }
+  .tip3{
+    width: 45.3px;
+    height: 53.3px;
+  }
+  .tip4{
+    width: 26.6px;
+    height: 60px;
+  }
+}

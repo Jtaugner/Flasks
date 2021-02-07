@@ -1,0 +1,81 @@
+.keyboard {
+  position: relative;
+}
+
+.keyboard__line {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  margin-bottom: 8px;
+}
+
+.keyboard__letter {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 41px;
+  border-radius: 4px;
+  background-color: white;
+  color: #755394;
+  font-size: 2.4rem;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.keyboard__line .keyboard__letter:last-child {
+  margin-right: 0;
+}
+
+.keyboard__letterTip {
+  position: absolute;
+  bottom: 0;
+  height: 82px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 3rem;
+  display: none;
+  border: 1.5px solid #755394;
+}
+
+.keyboard__letter_selected .keyboard__letterTip {
+  display: block;
+  z-index: 2;
+}
+
+.crossword__letter_selected {
+  border: 2px solid white;
+}
+
+.keyboard__deleteButton {
+  background: url(delete.png) 40% center no-repeat white;
+  background-size: 75%;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.keyboard__letter_notVisible {
+  opacity: 0;
+  cursor: default;
+}
+
+@media (min-width: 600px) {
+  .keyboard__deleteButton {
+    background-size: 65%;
+  }
+}
+@media (min-width: 800px) {
+  .keyboard {
+    width: 800px;
+    margin: 0 auto;
+    font-size: 2.7rem;
+  }
+
+  .keyboard__deleteButton {
+    background-size: 55%;
+  }
+}
+
+/*# sourceMappingURL=keyboard.css.map */

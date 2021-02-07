@@ -1,0 +1,182 @@
+@import "root";
+
+
+
+@font-face {
+  font-family: 'Ubuntu';
+  src: url("assets/Ubuntu-Light.ttf");
+
+  font-weight: normal;
+  font-variant: normal;
+  font-style: normal;
+}
+
+html, body, #root {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+  font: 10px/1.5 'Ubuntu', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#root, .mainPage{
+  background: url(assets/images/background.png) center center no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+
+// Анимация перехода между главной страницей и игрой
+.transGroup{
+  width: 100%;
+  height: 100%;
+}
+
+.slide-enter,
+.slide-exit {
+  transition: transform 1000ms ease-in-out;
+}
+
+.slide-exit, .slide-enter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translateX(0%);
+}
+.slide-exit-active {
+  transform: translateX(100%);
+}
+
+.transGroupMenu .slide-exit-active{
+  transform: translateX(-100%);
+}
+
+.popUp{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background: #f3f2f2;
+
+  border-radius: 24px;
+  padding-top: 50px;
+
+  box-shadow: 4px 4px 0 #b16448;
+}
+.popUp__header{
+  position: absolute;
+  top: 0;
+
+  width: 100%;
+  height: 60px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: white;
+
+  font-size: 2.5rem;
+
+  border-radius: 16px;
+
+  box-shadow: 0 1px 1px #b8b7b7;
+  border-bottom: 1px solid #b8b7b7;
+}
+
+.innerBlackout{
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.icon{
+  width: 35px;
+  height: 35px;
+
+  cursor: pointer;
+  position: relative;
+}
+.icon:before {
+  position: absolute;
+  content: "";
+  top: -10px;
+  right: -10px;
+  left: -10px;
+  bottom: -10px;
+}
+::-webkit-scrollbar-button {
+  background-repeat:no-repeat;
+  width:6px;
+  height:0;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #261624;
+  box-shadow: 0 0 3px #000 inset;
+  //-webkit-border-radius: 5px;
+  //border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  //-webkit-border-radius: 5px;
+  //border-radius: 5px;
+    background-color: #d07252;
+}
+
+::-webkit-resizer{
+  background-repeat:no-repeat;
+  width: 5px;
+  height: 0;
+}
+
+::-webkit-scrollbar{
+  width: 5px;
+  height: 13px;
+}
+
+.decor-button{
+  box-shadow: 2px 2px 0 #b16448;
+  //border-bottom: 2px solid #b16448;
+  //border-right: 3px solid #b16448;
+}
+
+
+@media (min-width: 600px) {
+  .icon{
+    width: 45px;
+    height: 45px;
+  }
+  .icon:before {
+    top: -20px;
+    right: -20px;
+    left: -20px;
+    bottom: -20px;
+  }
+  ::-webkit-resizer{
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar{
+    width: 10px;
+  }
+}
+
+@media (min-width: 600px) and (min-height: 750px) {
+  #root, .mainPage{
+    background: url(assets/images/background_desktop.png) left center repeat-x;
+    background-size: cover;
+  }
+}

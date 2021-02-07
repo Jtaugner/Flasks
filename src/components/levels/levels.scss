@@ -1,0 +1,86 @@
+@import '../../root';
+$close: #c1c0c0;
+$doneLevel: #d07252;
+.levels{
+  overflow-y: auto;
+
+  height: 100%;
+  width: 100%;
+
+  padding: 30px 20% 80px 20%;
+
+  z-index: 2
+;
+}
+
+.levels__level{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 60px;
+  height: 60px;
+
+  background-color: white;
+
+  font-size: 3rem;
+  color: #b16448;
+
+  border: 3px solid $doneLevel;
+  border-radius: 50%;
+}
+.levels__level_small{
+  font-size: 2.5rem;
+}
+.levels .levels__level:nth-child(2n){
+  margin-left: auto;
+}
+.levels__level_close{
+  background: white url(closeLevel.png) center center no-repeat;
+  background-size: 50%;
+  border-color: $close;
+
+}
+.levels__level_last{
+  color: $doneLevel;
+  border-color: $doneLevel;
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+@media (min-width: 600px) {
+  .levels{
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    overflow-x: auto;
+    height: 600px;
+
+    padding: 0 40px;
+  }
+  .levels__line{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    display:-webkit-box;
+  }
+  .levels .levels__line:nth-child(odd){
+    padding-left: 75px;
+  }
+  .levels__level{
+    width: 75px;
+    height: 75px;
+    font-size: 3.2rem;
+  }
+  .levels__level_small{
+    font-size: 2.8rem;
+  }
+  .levels__level, .levels .levels__level:nth-child(2n) {
+    margin: 18px 35px;
+
+  }
+
+}
+
+@media (min-width: 1000px) {
+
+}

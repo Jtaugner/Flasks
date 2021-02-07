@@ -1,0 +1,12 @@
+.top-menu__startAgain {
+  background: url(again.png) center center no-repeat white;
+  background-size: 65%;
+  border-radius: 12px;
+}
+
+@media (min-width: 600px) {
+  .top-menu__startAgain {
+    width: 55px;
+    height: 55px;
+  }
+}

@@ -16,8 +16,6 @@ const games = [
 function Settings(props) {
     const {closeSettings,
         toggleSounds, sounds,
-        toggleDeleteWrongWord, deleteWrongWord,
-        toggleStartFromFirstCell, startFromFirstCell
 
     } = props;
     const doParams = (id) => {
@@ -40,27 +38,7 @@ function Settings(props) {
                         </label>
                     </li>
 
-                    <li>
-                        <input type="checkbox"
-                               onChange={toggleDeleteWrongWord}
-                               checked={deleteWrongWord}
-                               id="wrongWordCheckbox" className="checkbox" />
-                        <label
-                            htmlFor="wrongWordCheckbox">
-                            Стирать неверное слово
-                        </label>
-                    </li>
 
-                    <li>
-                        <input type="checkbox"
-                               onChange={toggleStartFromFirstCell}
-                               checked={startFromFirstCell}
-                               id="startFromFirstCellCheckbox" className="checkbox" />
-                        <label
-                            htmlFor="startFromFirstCellCheckbox">
-                            Начинать с первой буквы
-                        </label>
-                    </li>
 
                     <li>
                         <a href={'https://vk.com/jaugr'}
@@ -102,11 +80,7 @@ function Settings(props) {
 }
 
 export default connect((store)=>({
-    sounds: selectSounds(store),
-    deleteWrongWord: selectIsDeleteWrongWord(store),
-    startFromFirstCell: selectStartFromFirstCell(store)
+    sounds: selectSounds(store)
 }), (dispatch)=>({
     toggleSounds: () => dispatch(toggleSounds()),
-    toggleDeleteWrongWord: () => dispatch(toggleDeleteWrongWord()),
-    toggleStartFromFirstCell: () => dispatch(toggleStartFromFirstCell())
 }))(Settings);

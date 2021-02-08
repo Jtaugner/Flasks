@@ -1,17 +1,13 @@
 import {
     ADD_MONEY,
-    ADD_OPENED_KEYBOARD, CHANGE_FROM_PLAYER_DATA,
-    CHANGE_GAME_PAYMENTS,
+    CHANGE_FROM_PLAYER_DATA,
     CHANGE_GAME_SDK,
-    CHANGE_LEVEL_PROGRESS, CLEAR_LEVEL_FROM_PROGRESS,
-    CLEAR_OPENED_KEYBOARD,
+    CHANGE_LEVEL_PROGRESS,
     INCREASE_LAST_LEVEL,
     INCREASE_LEVEL,
     SELECT_LEVEL,
     SUBTRACT_MONEY,
-    TOGGLE_DELETE_WRONG_WORD,
     TOGGLE_SOUNDS,
-    TOGGLE_START_FROM_FIRST_CELL
 } from "../common";
 
 
@@ -42,27 +38,11 @@ export const changeLevelProgress = (level, progress) => ({
     progress, level
 });
 
-export const clearLevelFromProgress = (level) => ({
-    type: CLEAR_LEVEL_FROM_PROGRESS,
-    level
-});
-
-export const changeGamePayments = (payments) => ({
-    type: CHANGE_GAME_PAYMENTS,
-    payments
-});
 
 
 export const changeFromPlayerData = (id, data) => ({
     type: CHANGE_FROM_PLAYER_DATA,
     id, data
-});
-
-export const toggleDeleteWrongWord = () => ({
-    type: TOGGLE_DELETE_WRONG_WORD,
-});
-export const toggleStartFromFirstCell = () => ({
-    type: TOGGLE_START_FROM_FIRST_CELL,
 });
 
 
@@ -74,14 +54,4 @@ export const subtractMoney = (money) => ({
 export const addMoney = (money) => ({
     type: ADD_MONEY,
     money
-});
-
-
-export const clearOpenedKeyboardWords = (level) => ({
-    type: CLEAR_OPENED_KEYBOARD,
-    level
-});
-export const addOpenedKeyboard = (level, index) => ({
-    type: ADD_OPENED_KEYBOARD,
-    level, index
 });

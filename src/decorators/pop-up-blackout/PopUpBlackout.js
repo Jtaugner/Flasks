@@ -12,7 +12,6 @@ function popUpBlackout(OriginalComponent) {
                 {...props}
                 style={{fontSize: 20}}
             />
-
         </div>;
         if(props.getHome) {
             return <Link to={'/home'}>

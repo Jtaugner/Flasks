@@ -6,19 +6,15 @@ import TopMenu from "../topMenu";
 import MenuLink from "../menuLink/menuLink";
 import Money from "../money/money";
 import {connect} from "react-redux";
-import {selectLevel} from "../../store/selectors";
-import Levels from "../levels/levels";
+import {selectLastLevel, selectLevel} from "../../store/selectors";
 import GameLevel from "../gameLevel/gameLevel";
 import StartAgainButton from "./startAgainButton/startAgainButton";
-import {getLevelInfo} from "../../projectCommon";
+import {getLevelHints, getLevelInfo, testLevelAbilityToComplete} from "../../projectCommon";
 import EndGameWindow from "../endGameWindow/endGameWindow";
-import {chooseLevel} from "../../store/ac";
+import {addMoney, chooseLevel, increaseLastLevel} from "../../store/ac";
+import Hint from "../hint/hint";
 
 
-const LEFT = { row: 0, col: -1 };
-const RIGHT = { row: 0, col: 1 };
-const DOWN = { row: 1, col: 0 };
-const UP = { row: -1, col: 0 };
 
 const colors = [
     "#d95e54",
@@ -70,14 +66,32 @@ window.onresize = () => {
 const hashPosition = ({ row, col }) => row + '.' + col;
 
 
-const IS_CREATE_LEVEL = true;
+const IS_CREATE_LEVEL = false;
+
+const ignoreBlackoutSteps = [1,2,4,5];
+function testBlackoutHintStep(step){
+    return ignoreBlackoutSteps.includes(step);
+}
+
+let isTeach = true;
+//Внутри [ [String: key, Object: node obj] ... ]
+let allGameMoves = [];
 
 function GamePage(props) {
-    const {level, chooseLevel} = props;
+    const {
+        level, lastLevel,
+        addMoney, increaseLastLevel, chooseLevel
+    } = props;
 
     let levelInfo = getLevelInfo(level);
 
     const [isWin, setIsWin] = useState(false);
+    const [isAddMoney, setIsAddMoney] = useState(false);
+
+    //Для обучения
+    const [isShowHint, setIsShowHint] = useState(false);
+    const [teaching, setTeaching] = useState(false);
+    const [teachingStep, changeTeachingStep] = useState(0);
 
     const [gameState, setGameState] = useState(levelInfo.gameState);
 
@@ -85,23 +99,63 @@ function GamePage(props) {
     let tubeHeight = levelInfo.tubeHeight;
     let numEmptyTube = levelInfo.numEmptyTube;
 
-    //Отладка - создание уровня - комментировать перед продом
-    numColors = 8;
-    tubeHeight = 3;
-    numEmptyTube = 2;
 
-    let nodes = _.chain(numColors)
-        .range()
-        .map(colorIndex => {
-            return _.range(tubeHeight).map(() => colorIndex);
-        })
-        .flatten()
-        .shuffle()
-        .value();
+    const getTeaching = () => {
+        if(level <= 1){
+            setIsShowHint(true);
+        }
+        if(level === 0){
+            setTeaching(true);
+        }
+
+    };
+
+    useEffect(getTeaching, [level]);
+
+    const closeHint = () => {
+        if(level >= 1) setIsShowHint(false);
+        if(testBlackoutHintStep(teachingStep)) return;
+
+
+        const step = teachingStep + 1;
+        if(step >= 7) setIsShowHint(false);
+        changeTeachingStep(step);
+        if(step === 8){
+            isTeach = false;
+            setTeaching(false);
+            testWin();
+        }
+
+
+
+
+
+    }
+
+
+
+
+    //Отладка - создание уровня - комментировать перед продом
+    // numColors = 2;
+    // tubeHeight = 3;
+    // numEmptyTube = 1;
+
+    let nodes;
+
 
     const createLevel = () => {
         if(!IS_CREATE_LEVEL) return;
-        setSelectedNode(null);
+
+        nodes = _.chain(numColors)
+            .range()
+            .map(colorIndex => {
+                return _.range(tubeHeight).map(() => colorIndex);
+            })
+            .flatten()
+            .shuffle()
+            .value();
+
+
         const positions = _.chain(numColors)
             .range()
             .map(col => {
@@ -109,8 +163,7 @@ function GamePage(props) {
             })
             .flatten()
             .value();
-
-        let state = _.chain(positions)
+        const state =  _.chain(positions)
             .map((position, index) => {
                 return {
                     ...position,
@@ -121,11 +174,30 @@ function GamePage(props) {
             .keyBy(hashPosition)
             .value();
 
-        setGameState(state);
+        localStorage.setItem('tubeState', JSON.stringify({
+            gameState: state,
+            numColors,
+            tubeHeight,
+            numEmptyTube
+        }))
+        if(testLevelAbilityToComplete(state, numEmptyTube)){
+            setGameState(state);
+            setSelectedNode(null);
+        }else{
+            console.log("BAD LEVEL");
+            createLevel();
+        }
+
+
     };
 
     useEffect(createLevel, [numColors, tubeHeight, numEmptyTube]);
     //Конец создания уровня
+
+
+
+
+
 
     const [selectedNode, setSelectedNode] = useState(null);
     const [highNode, setHighNode] = useState(null);
@@ -160,6 +232,9 @@ function GamePage(props) {
                 (colNodes.length < tubeHeight &&
                     firstNode.colorIndex === node.colorIndex)
             ) {
+
+                allGameMoves.push([selectedNode, node]);
+
                 const newState = { ...gameState };
                 newState[selectedNode] = {
                     ...node,
@@ -168,14 +243,31 @@ function GamePage(props) {
                 };
                 setGameState(_.keyBy(newState, hashPosition));
                 setHighNode(hashPosition(newState[selectedNode]));
+                if(teaching && teachingStep < 7){
+                    changeTeachingStep(teachingStep + 1);
+                }
                 setTimeout(() => {
                     setHighNode(null);
                 }, 200);
+
+
             } else {
                 setHighNode(null);
             }
             setSelectedNode(null);
         } else if (firstNode) {
+
+
+            if(teaching){
+                if(teachingStep === 1){
+                    changeTeachingStep(2);
+                }else if(teachingStep === 4){
+                    if(firstNode.row !== 0) return;
+                    changeTeachingStep(5);
+                }
+            }
+
+
             setSelectedNode(hashPosition(firstNode));
             setHighNode(hashPosition(firstNode));
         } else {
@@ -186,6 +278,8 @@ function GamePage(props) {
         testWin();
 
     };
+
+
 
 
 
@@ -224,6 +318,7 @@ function GamePage(props) {
       const colNodes = findColNodes(col);
       const firstNode = colNodes[0];
       const selectedNodeInfo = gameState[selectedNode];
+      //Если шар нельзя положить в эту колбу - показываем дефолтный курсор
       if(firstNode &&
           (firstNode.row === 0 || firstNode.colorIndex !== selectedNodeInfo.colorIndex)
         ) return 'default';
@@ -255,6 +350,7 @@ function GamePage(props) {
 
 
     const startAgain = () => {
+        if(level === 0) return;
         setGameState(levelInfo.gameState);
     }
 
@@ -269,10 +365,26 @@ function GamePage(props) {
                 ballsInTubes[ballState.colorIndex] = ballState.col;
             }
         }
+        //Выиграть уровень
+        if(teaching && teachingStep === 7 && isTeach) {
+            setIsShowHint(true);
+            return;
+        }
+
         setIsWin(true);
+        if(level === lastLevel) {
+            increaseLastLevel(lastLevel+1);
+            setIsAddMoney(true);
+            addMoney();
+        }else{
+            setIsAddMoney(false);
+        }
     }
 
     const nextGame = () => {
+        //Переходим на следующий уровень
+        allGameMoves = [];
+        changeTeachingStep(0);
         const newLevel = level + 1;
         chooseLevel(newLevel)
         levelInfo = getLevelInfo(newLevel);
@@ -285,6 +397,65 @@ function GamePage(props) {
         setIsWin(false)
     }
 
+    const returnBack = () => {
+        if(allGameMoves.length === 0 || level === 0) return;
+        setSelectedNode(null);
+        setHighNode(null);
+
+        const lastMove = allGameMoves.pop();
+
+        const newState = { ...gameState };
+
+        //Убираем последний ход
+        const keys = Object.keys(newState);
+        const key = lastMove[1].key;
+
+
+        for(let i = 0; i < keys.length; i++){
+            if(newState[keys[i]].key === key){
+                delete newState[keys[i]];
+                break;
+            }
+        }
+
+        //Возвращаем предпоследний ход
+        newState[lastMove[0]] = lastMove[1];
+
+        setGameState(newState);
+
+    }
+
+
+    const isShowBallHand = (col, row) => {
+        if(!teaching) return false;
+        return (teachingStep === 1 || teachingStep === 4) && row === 0 ;
+    }
+
+    const isShowTubeHand = (col) => {
+        if(!teaching) return false;
+        if(teachingStep === 2 && col === 2) return true;
+        if(teachingStep === 5){
+            if(!highNode) return false;
+            let selectedCol = Number(highNode[2]);
+            if(
+                (selectedCol === 0 && col === 1) ||
+                (selectedCol === 1 && col === 0)   ) return true;
+        }
+        return false;
+
+    }
+
+    const isShowBall = (col, row, pos) => {
+        if(!teaching) return false;
+        return ( (teachingStep === 1 || teachingStep === 4) && row === 0 ) ||
+            ( (teachingStep === 2 || teachingStep === 5) && pos);
+
+    }
+
+    const getBlackoutClasses = () => {
+        return "blackout hintBlackout " + (testBlackoutHintStep(teachingStep) ? 'hintBlackout_noPointers' : '');
+    }
+
     return (
             <div
                 className="gamePage"
@@ -294,8 +465,12 @@ function GamePage(props) {
                     <MenuLink/>
                     <StartAgainButton onClick={startAgain}/>
                     <GameLevel level={level}/>
-                    <Money/>
+                    <Money onClick={returnBack} allGameMoves={allGameMoves} level={level}/>
                 </TopMenu>
+
+
+
+                {isShowHint ? <div className={getBlackoutClasses()} onClick={closeHint}/> : ''}
 
                 <div
                     className={'gamePage__tubes'}
@@ -304,6 +479,13 @@ function GamePage(props) {
                         height: getTubesBlockHeight()
                     }}
                 >
+
+                    {isShowHint ? <Hint
+                        message={getLevelHints(level, teachingStep)}
+                        isBottomHint={teachingStep === 2 || teachingStep === 5}
+                    /> : ''}
+
+
                     {_.range(tubesAmount).map(col => (
                         <div
                             className={'gamePage__tube'}
@@ -336,10 +518,11 @@ function GamePage(props) {
                             >
 
                             </div>
+                            {isShowTubeHand(col) ?  <div className="hand hand_tube" /> : ''}
                         </div>
                     ))}
 
-                    {_.map(gameState, ({ row, col, colorIndex, key, locked }) => (
+                    {_.map(gameState, ({ row, col, colorIndex, key }) => (
                         <div
                             className={'gamePage__ball'}
                             key={key}
@@ -352,15 +535,20 @@ function GamePage(props) {
                                     hashPosition({ row, col }) === highNode
                                         ?  -ballWidth + (col < nextLineTubeNumber ? 0 : nextLineTop)
                                         : (row) * ballWidth + spaceBetweenBalls + 5 + (col < nextLineTubeNumber ? 0 : nextLineTop),
+                                zIndex: isShowBall(col, row, hashPosition({ row, col }) === highNode) ? 3
+                                    : (col < nextLineTubeNumber ? 2 : 3)
                             }}
-                        />
+                        >
+                            {isShowBallHand(col, row) ?  <div className="hand" /> : ''}
+                        </div>
                     ))}
                 </div>
+
 
                 {isWin?
                     <EndGameWindow
                         nextGame={nextGame}
-                        addMoney={true}
+                        isAddMoney={isAddMoney}
                         level={level}
                     /> : ''}
             </div>
@@ -369,10 +557,13 @@ function GamePage(props) {
 
 export default connect(
     (store)=>({
-        level: selectLevel(store)
+        level: selectLevel(store),
+        lastLevel: selectLastLevel(store),
     }),
     (dispatch)=>({
-        chooseLevel: (level) => dispatch(chooseLevel(level))
+        chooseLevel: (level) => dispatch(chooseLevel(level)),
+        addMoney: () => dispatch(addMoney()),
+        increaseLastLevel: () => dispatch(increaseLastLevel())
     })
 
 )(GamePage);

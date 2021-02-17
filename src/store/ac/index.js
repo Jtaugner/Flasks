@@ -47,11 +47,9 @@ export const changeFromPlayerData = (id, data) => ({
 
 
 //Деньги
-export const subtractMoney = (money) => ({
-    type: SUBTRACT_MONEY,
-    money
+export const subtractMoney = () => ({
+    type: SUBTRACT_MONEY
 });
-export const addMoney = (money) => ({
-    type: ADD_MONEY,
-    money
+export const addMoney = () => ({
+    type: ADD_MONEY
 });

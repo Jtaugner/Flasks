@@ -2,11 +2,11 @@ import React from 'react';
 import './endGameWindow.scss'
 import popUpBlackout from "../../decorators/pop-up-blackout/PopUpBlackout";
 import MenuLink from "../menuLink/menuLink";
-import {gameLevels} from "../../projectCommon";
+import {gameLevels, moneyPerLevel} from "../../projectCommon";
 
 //[[0,0,0,0,0,0,0,0],true,true,true,true,true,true,true,true,true]
 function EndGameWindow(props) {
-    const {nextGame, level} = props;
+    const {nextGame, level, isAddMoney} = props;
     return (
         <div className="endGame popUp">
             <div className="popUp__header">
@@ -15,7 +15,7 @@ function EndGameWindow(props) {
             <div className="endGame__prize">
                 Ваша награда:
                 <div className="endGame__prizeMoney">
-                    {props.addMoney ? '+5' : 0}
+                    {isAddMoney ? '+' + moneyPerLevel : 0}
                     <div className="endGame__money" />
                 </div>
             </div>

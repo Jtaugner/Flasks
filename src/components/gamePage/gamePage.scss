@@ -65,10 +65,48 @@ $tube_color: #292828;
 
   z-index: 3;
 }
+//Обучение
+
+.hintBlackout{
+  z-index: 3;
+}
+.hintBlackout_noPointers{
+  pointer-events: none;
+}
+
+.hand{
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 60px;
+  height: 80px;
+
+  background: url(hand.png) center center no-repeat;
+  background-size: 100%;
+
+  z-index: 6;
+
+}
+
+.hand_tube{
+  bottom: 100px;
+}
 
 @media (min-width: 500px) {
   .gamePage__tube{
     border-radius: 0 0 30px 30px;
+  }
+}
+
+@media (min-width: 600px) {
+  .hand {
+    width: 90px;
+    height: 120px;
+  }
+  .hand_tube{
+    bottom: 150px;
   }
 }
 

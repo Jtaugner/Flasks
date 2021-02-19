@@ -14,6 +14,7 @@ import EndGameWindow from "../endGameWindow/endGameWindow";
 import {addMoney, chooseLevel, increaseLastLevel} from "../../store/ac";
 import Hint from "../hint/hint";
 import {ballSound} from "../../sounds";
+import {reachGoal} from "../../App";
 
 
 
@@ -67,7 +68,7 @@ window.onresize = () => {
 const hashPosition = ({ row, col }) => row + '.' + col;
 
 
-// const IS_CREATE_LEVEL = false;
+// const IS_CREATE_LEVEL = true;
 
 const ignoreBlackoutSteps = [1,2,4,5];
 function testBlackoutHintStep(step){
@@ -88,6 +89,10 @@ function GamePage(props) {
     } = props;
 
     let levelInfo = getLevelInfo(level);
+    if(level === 9){reachGoal('level10')}
+    else if(level === 49){reachGoal('level50')}
+    else if(level === 99){reachGoal('level100')}
+    else if(level === 199){reachGoal('level200')}
 
     const [isWin, setIsWin] = useState(false);
     const [isAddMoney, setIsAddMoney] = useState(false);
@@ -137,9 +142,9 @@ function GamePage(props) {
 
     //Отладка - создание уровня - комментировать перед продом
     // if(IS_CREATE_LEVEL){
-    //     numColors = 10;
-    //     tubeHeight = 4;
-    //     numEmptyTube = 2;
+    //     numColors = 4;
+    //     tubeHeight = 5;
+    //     numEmptyTube = 1;
     // }
     //
     //
@@ -204,7 +209,7 @@ function GamePage(props) {
     // };
     // if(IS_CREATE_LEVEL){
     //
-    //     for(let i = 0; i < 28; i++){
+    //     for(let i = 0; i < 99; i++){
     //         numColors = Math.floor(Math.random() * 7) + 4;
     //         tubeHeight = 4;
     //         numEmptyTube = 2;
@@ -218,7 +223,7 @@ function GamePage(props) {
     // }
     //
     // localStorage.setItem('allLevelsTubes', JSON.stringify(levels));
-    //
+
     // useEffect(createLevel, [numColors, tubeHeight, numEmptyTube]);
     //Конец создания уровня
 
@@ -336,6 +341,13 @@ function GamePage(props) {
         info.tubesInSecondLine = info.tubesAmount - info.tubesInFirstLine;
 
         info.tubeWidth = (flasksWidth - spaceBetweenTubes * (info.tubesInLine + 1)) / info.tubesInLine;
+        console.log(info.tubeWidth);
+        console.log(info.tubeWidth * tubeHeight * 2);
+        if(window.innerWidth > 600 && tubeNumberToDivideLines <= info.tubesAmount &&
+            info.tubeWidth * tubeHeight * 2 > window.innerHeight * 0.6){
+            info.tubeWidth = (window.innerHeight * 0.6  - spaceBetweenTubes * (info.tubesInLine + 1)) / info.tubesInLine;
+        }
+        console.log(info.tubeWidth);
         info.ballWidth = info.tubeWidth - diffBetweenTubeAndBall;
         info.tubeHeightPx = tubeHeight * info.ballWidth + 10;
         info.firstLineSpace = 0;
@@ -581,8 +593,8 @@ function GamePage(props) {
                                     hashPosition({ row, col }) === highNode
                                         ?  -infoAboutInterface.ballWidth + (col < infoAboutInterface.nextLineTubeNumber ? 0 : infoAboutInterface.nextLineTop)
                                         : (row) * infoAboutInterface.ballWidth + spaceBetweenBalls + 5 + (col < infoAboutInterface.nextLineTubeNumber ? 0 : infoAboutInterface.nextLineTop),
-                                zIndex: isShowBall(col, row, hashPosition({ row, col }) === highNode) ? 3
-                                    : (col < infoAboutInterface.nextLineTubeNumber ? 2 : 3)
+                                zIndex: isShowBall(col, row, hashPosition({ row, col }) === highNode) ? 4
+                                    : (col < infoAboutInterface.nextLineTubeNumber ? 3 : 4)
                             }}
                         >
                             {isShowBallHand(col, row) ?  <div className="hand" /> : ''}

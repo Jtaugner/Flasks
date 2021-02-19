@@ -2,11 +2,16 @@
   background: url(again.png) center center no-repeat white;
   background-size: 65%;
   border-radius: 12px;
+
+  margin: 0 auto 0 25px;
 }
 
 @media (min-width: 600px) {
   .top-menu__startAgain {
     width: 55px;
     height: 55px;
+  }
+  .top-menu__startAgain{
+    margin-left: 50px;
   }
 }

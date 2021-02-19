@@ -343,8 +343,8 @@ function GamePage(props) {
         info.tubeWidth = (flasksWidth - spaceBetweenTubes * (info.tubesInLine + 1)) / info.tubesInLine;
         console.log(info.tubeWidth);
         console.log(info.tubeWidth * tubeHeight * 2);
-        if(window.innerWidth > 600 && tubeNumberToDivideLines <= info.tubesAmount &&
-            info.tubeWidth * tubeHeight * 2 > window.innerHeight * 0.6){
+        if(window.innerWidth > 600 && window.innerHeight < 1100 && tubeNumberToDivideLines <= info.tubesAmount &&
+            info.tubeWidth * tubeHeight * 2 > window.innerHeight * 0.6 ){
             info.tubeWidth = (window.innerHeight * 0.6  - spaceBetweenTubes * (info.tubesInLine + 1)) / info.tubesInLine;
         }
         console.log(info.tubeWidth);

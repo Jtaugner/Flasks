@@ -25,8 +25,12 @@ $tube_color: #292828;
   position: relative;
 
   height: 80%;
+  margin: auto auto 70px auto;
+  margin: auto auto 15vh auto;
+}
+.gamePage__tubes_twoLines{
   margin: auto auto 50px auto;
-  margin: auto auto 10vh auto;
+  margin: auto auto 8vh auto;
 }
 .gamePage__tube{
   position: absolute;
@@ -113,9 +117,12 @@ $tube_color: #292828;
 @media (min-height: 800px) {
   .gamePage__tubes{
     margin: auto auto 80px auto;
-    margin: auto auto 15vh auto;
+    margin: auto auto 20vh auto;
   }
-  
+  .gamePage__tubes_twoLines{
+    margin: auto auto 45px auto;
+    margin: auto auto 5vh auto;
+  }
 }
 
 @media (max-width: 700px) {

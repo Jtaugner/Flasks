@@ -6,9 +6,11 @@ import {selectIsDeleteWrongWord, selectSounds, selectStartFromFirstCell} from ".
 import {giveParams} from "../../App";
 const games = [
     {id: 99195, classGame: 'wfw'},
+    {id: 100008, classGame: 'cross'},
     {id: 99196, classGame: 'wfl'},
     {id: 100325, classGame: 'tm'},
     {id: 98125, classGame: 'stm'},
+
 ];
 
 //

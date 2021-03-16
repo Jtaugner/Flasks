@@ -1,14 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './money.scss'
 import {connect} from "react-redux";
 import {selectMoney} from "../../store/selectors";
-import {subtractMoney, toggleShopOpened} from "../../store/ac";
+import {subtractMoney} from "../../store/ac";
 
 
 function Money(props) {
     const {money, onClick, subtractMoney, allGameMoves, level} = props;
+    const [showingTip, setShowingTip] = useState(true);
     const useTip = () => {
-        if(allGameMoves.length === 0 || level === 0 || !onClick) return;
+        if(!onClick || allGameMoves.length === 0 || level === 0) {
+            setShowingTip(true);
+            return;
+        }
+        setShowingTip(false);
         if(level !== 1){
             subtractMoney();
         }
@@ -16,9 +21,10 @@ function Money(props) {
         onClick();
     }
     return (
-        <div className="moneyBlock decor-button" onClick={useTip}>
+        <div className={"moneyBlock decor-button " + (onClick && allGameMoves.length === 0 ? 'moneyBlock_game' : '')} onClick={useTip}>
             <span className={'moneyBlock__moneyAmount'}>{money}</span>
             <div className="moneyBlock__moneyPic" />
+            {level < 15 && showingTip ? <div className="moneyBlock__tip">Кнопка отмены последнего хода</div> : ''}
         </div>
     );
 }

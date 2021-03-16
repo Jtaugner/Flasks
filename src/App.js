@@ -30,8 +30,15 @@ console.log('V-4');
 //Реклама
 let advTime = true;
 class App extends Component {
+    showAdv;
+    saveData;
+
     constructor(props) {
         super(props);
+
+        this.showAdv = props.showAdv;
+        this.saveData = props.saveData;
+
         this.state = {
             isError: false,
             canSwitchPage: true
@@ -104,7 +111,7 @@ class App extends Component {
                                    render={() => <MainPage canSwitchPage={this.state.canSwitchPage}/>}
                                    />
                             <Route path={'/game'}
-                                   render={() => <GamePage showAdv={this.props.showAdv}/>}
+                                   render={() => <GamePage showAdv={this.showAdv} saveData={this.saveData}/>}
                                    />
 
 
@@ -126,28 +133,6 @@ export default connect(
         settings: selectSettings(store),
         sdk: selectGameSDK(store)
     }),
-    null,
-    (stateProps, dispatchProps) => {
-        return ({
-            ...stateProps,
-            ...dispatchProps,
-            showAdv: () => {
-                if(stateProps.sdk && advTime){
-                    stateProps.sdk.adv.showFullscreenAdv({
-                        callbacks: {
-                            onClose: function(wasShown) {
-                                if(wasShown){
-                                    advTime = false;
-                                    setTimeout(()=>{
-                                        advTime = true;
-                                    }, 200000);
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-        })
-    }
+    null
 
 )(withRouter(App));

@@ -99,21 +99,19 @@ const NewAudioContext = (function () {
     return WebAudioAPISound;
 })();
 
-export const openGameSound = new NewAudioContext('openGame.mp3');
-export const goMainPageSound = new NewAudioContext('goMainPage.mp3');
-export const openKeyboardSound = new NewAudioContext('openKeyboard.mp3');
 
-export const openNewLetterSound = new NewAudioContext('newLetters.mp3');
-export const newWordSound = new NewAudioContext('newWord.mp3');
-export const wrongWordSound = new NewAudioContext('wrongWord.mp3');
+
 export const winSound = new NewAudioContext('win.mp3');
-export const addLetterSound = new NewAudioContext('addLetter.mp3');
-export const deleteLetterSound = new NewAudioContext('deleteLetter.mp3');
+export const returnBackSound = new NewAudioContext('returnBack.mp3');
+
+export const clickSound = new NewAudioContext('addLetter.mp3');
 
 export const ballSound = new NewAudioContext('ball.mp3');
+ballSound.setVolume(0.4);
+returnBackSound.setVolume(0.3);
+export const sortSound = new NewAudioContext('sort.mp3');
 
-deleteLetterSound.setVolume(0.3);
-addLetterSound.setVolume(0.3);
+
 
 
 

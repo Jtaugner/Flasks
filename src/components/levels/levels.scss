@@ -9,8 +9,7 @@ $doneLevel: #d07252;
 
   padding: 30px 20% 80px 20%;
 
-  z-index: 2
-;
+  z-index: 2;
 }
 
 .levels__level{
@@ -49,9 +48,10 @@ $doneLevel: #d07252;
 @media (min-width: 600px) {
   .levels{
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: column nowrap;
     justify-content: center;
     overflow-x: auto;
+    overflow-y: hidden;
     height: 600px;
 
     padding: 0 40px;

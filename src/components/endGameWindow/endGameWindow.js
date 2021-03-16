@@ -13,11 +13,22 @@ function EndGameWindow(props) {
                 Уровень {level+1} пройден!
             </div>
             <div className="endGame__prize">
-                Ваша награда:
-                <div className="endGame__prizeMoney">
-                    {isAddMoney ? '+' + moneyPerLevel : 0}
-                    <div className="endGame__money" />
-                </div>
+                {
+                    level !== gameLevels.length-1 ?
+                    <>
+                        Ваша награда:
+                        <div className="endGame__prizeMoney">
+                            {isAddMoney ? '+' + moneyPerLevel : 0}
+                            <div className="endGame__money" />
+                        </div>
+                    </>
+                        :
+                        <div className={'endGame__text'}>
+                            На данный момент это последний уровень игры, но скоро появятся новые!
+                            А пока вы можете поиграть в другие наши игры, найти ссылки на них можно в настройках Колбочек.
+                        </div>
+                }
+
             </div>
 
             <div className="endGame__actions">

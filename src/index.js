@@ -6,41 +6,40 @@ import {Provider} from 'react-redux'
 import {store} from "./store";
 import {MemoryRouter} from "react-router-dom";
 import {
-    addMoney, changeFromPlayerData,
-    changeGamePayments,
+    changeFromPlayerData,
     changeGameSDK, chooseLevel,
 } from "./store/ac";
 import {
     selectLastLevel,
-    selectLevelProgress,
     selectMoney,
-    selectOpenedKeyboardWords
 } from "./store/selectors";
 
 var playerGame;
 
 
-let recentData = '';
-
 function getState() {
     const state = store.getState();
     return {
         money: selectMoney(state),
-        lastLevel: selectLastLevel(state),
-        levelProgress: selectLevelProgress(state),
-        openedKeyboardWords: selectOpenedKeyboardWords(state),
+        lastLevel: selectLastLevel(state)
     }
 }
 
+let advTime;
+let showAdv;
+
 // Сохранение данных в аккаунт пользователя Яндекса
-export function saveData() {
+function saveData() {
+    console.log('saveData');
     try{
         if (playerGame) {
-            const state = {gameProgress: getState()};
-            const newData = JSON.stringify(state);
-            if(newData === recentData) return;
-            recentData = newData;
-            if(playerGame) playerGame.setData(state).then((ignored) => {}).catch(()=>{});
+            const state = getState();
+            if(playerGame)
+                playerGame.setStats(state)
+                .then((ignored) => {console.log('Successful');})
+                .catch((e)=>{
+                    console.log(e);
+                });
         }
     }catch (ignored) {}
 }
@@ -50,39 +49,18 @@ export function initPlayer(ysdk) {
     ysdk.getPlayer().then(_player => {
         // Игрок авторизован.
         playerGame = _player;
-
-        //Сохранение данных на серверах Яндекса при закрытии, смене вкладке, обновлении
-        window.onblur = saveData;
-        window.onunload= saveData;
-        window.onbeforeunload = saveData;
-        window.onpagehide = saveData;
-
-        // Сохранение данных каждые 60 сек
-        setInterval(()=>{
-            saveData();
-        }, 60000);
-
-        playerGame.getData(['gameProgress'], false).then((data) => {
-            const gp = data.gameProgress;
-            console.log('date', gp);
-            if(gp){
-                if(gp.money) store.dispatch(changeFromPlayerData('money', gp.money));
-                if(gp.lastLevel) {
-                    store.dispatch(changeFromPlayerData('lastLevel', gp.lastLevel));
-                    store.dispatch(chooseLevel(gp.lastLevel));
-                }
-                if(gp.levelProgress) store.dispatch(changeFromPlayerData('levelProgress', gp.levelProgress));
-                if(gp.openedKeyboardWords) store.dispatch(changeFromPlayerData('openedKeyboardWords', gp.openedKeyboardWords));
-
-                /*
-                    Пример измененеия данных
-                        store.dispatch(changeExp(gp.exp));
-                 */
-            }else{
-                saveData();
+        playerGame.getStats(['money', 'lastLevel'], false).then((dataObject) => {
+            console.log('DATA');
+            console.log(dataObject);
+            if (dataObject.money) store.dispatch(changeFromPlayerData('money', dataObject.money));
+            if(dataObject.lastLevel){
+                store.dispatch(changeFromPlayerData('lastLevel', dataObject.lastLevel));
+                store.dispatch(chooseLevel(dataObject.lastLevel));
             }
+
             createApp();
         }).catch((e) => {
+            console.log(e);
             createApp();
         });
     }).catch((e) => {
@@ -98,7 +76,7 @@ function createApp() {
                 initialEntries={['/game']}
                 initialIndex={0}
             >
-                <App/>
+                <App showAdv={showAdv} saveData={saveData}/>
             </MemoryRouter>
         </Provider>
 
@@ -124,6 +102,20 @@ if (window.YaGames) {
                             });
                     };
                 }
+
+                showAdv = () => {
+                    if(!advTime) return;
+                    ysdk.adv.showFullscreenAdv({
+                        callbacks: {
+                            onClose: function() {
+                                advTime = false;
+                                setTimeout(()=>{
+                                    advTime = true;
+                                }, 210000);
+                            }
+                        }
+                    });
+                };
 
                 initPlayer(ysdk);
             });

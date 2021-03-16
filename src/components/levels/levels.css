@@ -42,9 +42,10 @@
 @media (min-width: 600px) {
   .levels {
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: column nowrap;
     justify-content: center;
     overflow-x: auto;
+    overflow-y: hidden;
     height: 600px;
     padding: 0 40px;
   }

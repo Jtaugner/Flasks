@@ -1,0 +1,31 @@
+.skipWindow__button {
+  width: 120px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 15px;
+  font-size: 1.7rem;
+  color: #b16448;
+}
+
+.skipWindow .endGame__prize {
+  padding: 10px;
+  font-size: 2.2rem;
+}
+
+@media (min-width: 600px) {
+  .skipWindow .endGame__prize {
+    padding: 20px;
+    font-size: 2.5rem;
+  }
+
+  .skipWindow__button {
+    width: 150px;
+    height: 50px;
+    font-size: 2rem;
+  }
+}
+
+/*# sourceMappingURL=skipLevelWindow.css.map */

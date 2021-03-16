@@ -1,3 +1,5 @@
+import {getFromLocalStorage} from "./store/common";
+
 export const YM_METRIKA_ID = 72703150;
 
 // Алгоритм случайного перемешивания массива
@@ -77,11 +79,13 @@ export const isPhone = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera
 //     return newArr;
 // }
 //
+// let movesWin = null;
 //
-// function tryToComplete(arr){
+// function tryToComplete(arr, moves){
 //     if(canCompleteLevel) return true;
 //     if(isLevelCompleted(arr)) {
 //         canCompleteLevel = true;
+//         movesWin = moves;
 //         return true;
 //     }
 //     // console.log('tryToComplete');
@@ -95,10 +99,14 @@ export const isPhone = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera
 //     // console.log(allMoves);
 //     for(let i = 0; i < allMoves.length; i++){
 //         let newArr = copyArr(arr);
+//
 //         newArr[allMoves[i][1][0]][allMoves[i][1][1]] = newArr[allMoves[i][0][0]][allMoves[i][0][1]];
 //         newArr[allMoves[i][0][0]][allMoves[i][0][1]] = null;
-//         // console.log(newArr);
-//         if(tryToComplete(newArr, allMoves[i])) return true;
+//
+//         let newMoves = moves.slice();
+//         newMoves.push(allMoves[i]);
+//
+//         if(tryToComplete(newArr, newMoves)) return true;
 //     }
 //     return false;
 // }
@@ -125,8 +133,10 @@ export const isPhone = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera
 //         //Если уровень пройдег сразу  - false;
 //         if(isLevelCompleted(arr)) return false;
 //
-//         tryToComplete(arr);
+//         tryToComplete(arr, []);
 //         // console.log("RESULT: ", res);
+//         console.log("DASDвфыв");
+//         console.log(movesWin);
 //         return canCompleteLevel;
 //     }catch(e){
 //         return false;
@@ -155,7 +165,7 @@ export const gameLevels = [
     {"gameState":{"0.0":{"row":0,"col":0,"colorIndex":2,"key":0},"1.0":{"row":1,"col":0,"colorIndex":1,"key":1},"2.0":{"row":2,"col":0,"colorIndex":2,"key":2},"3.0":{"row":3,"col":0,"colorIndex":0,"key":3},"0.1":{"row":0,"col":1,"colorIndex":3,"key":4},"1.1":{"row":1,"col":1,"colorIndex":0,"key":5},"2.1":{"row":2,"col":1,"colorIndex":1,"key":6},"3.1":{"row":3,"col":1,"colorIndex":2,"key":7},"0.2":{"row":0,"col":2,"colorIndex":3,"key":8},"1.2":{"row":1,"col":2,"colorIndex":0,"key":9},"2.2":{"row":2,"col":2,"colorIndex":3,"key":10},"3.2":{"row":3,"col":2,"colorIndex":1,"key":11},"0.3":{"row":0,"col":3,"colorIndex":3,"key":12},"1.3":{"row":1,"col":3,"colorIndex":2,"key":13},"2.3":{"row":2,"col":3,"colorIndex":0,"key":14},"3.3":{"row":3,"col":3,"colorIndex":1,"key":15}},"numColors":4,"tubeHeight":4,"numEmptyTube":1},
     {"gameState":{"0.0":{"row":0,"col":0,"colorIndex":3,"key":0},"1.0":{"row":1,"col":0,"colorIndex":2,"key":1},"2.0":{"row":2,"col":0,"colorIndex":3,"key":2},"3.0":{"row":3,"col":0,"colorIndex":4,"key":3},"0.1":{"row":0,"col":1,"colorIndex":0,"key":4},"1.1":{"row":1,"col":1,"colorIndex":3,"key":5},"2.1":{"row":2,"col":1,"colorIndex":1,"key":6},"3.1":{"row":3,"col":1,"colorIndex":0,"key":7},"0.2":{"row":0,"col":2,"colorIndex":0,"key":8},"1.2":{"row":1,"col":2,"colorIndex":2,"key":9},"2.2":{"row":2,"col":2,"colorIndex":4,"key":10},"3.2":{"row":3,"col":2,"colorIndex":4,"key":11},"0.3":{"row":0,"col":3,"colorIndex":2,"key":12},"1.3":{"row":1,"col":3,"colorIndex":4,"key":13},"2.3":{"row":2,"col":3,"colorIndex":0,"key":14},"3.3":{"row":3,"col":3,"colorIndex":1,"key":15},"0.4":{"row":0,"col":4,"colorIndex":2,"key":16},"1.4":{"row":1,"col":4,"colorIndex":1,"key":17},"2.4":{"row":2,"col":4,"colorIndex":1,"key":18},"3.4":{"row":3,"col":4,"colorIndex":3,"key":19}},"numColors":5,"tubeHeight":4,"numEmptyTube":2},
     {"gameState":{"0.0":{"row":0,"col":0,"colorIndex":1,"key":0},"1.0":{"row":1,"col":0,"colorIndex":6,"key":1},"2.0":{"row":2,"col":0,"colorIndex":6,"key":2},"3.0":{"row":3,"col":0,"colorIndex":1,"key":3},"0.1":{"row":0,"col":1,"colorIndex":5,"key":4},"1.1":{"row":1,"col":1,"colorIndex":4,"key":5},"2.1":{"row":2,"col":1,"colorIndex":0,"key":6},"3.1":{"row":3,"col":1,"colorIndex":3,"key":7},"0.2":{"row":0,"col":2,"colorIndex":0,"key":8},"1.2":{"row":1,"col":2,"colorIndex":2,"key":9},"2.2":{"row":2,"col":2,"colorIndex":4,"key":10},"3.2":{"row":3,"col":2,"colorIndex":3,"key":11},"0.3":{"row":0,"col":3,"colorIndex":5,"key":12},"1.3":{"row":1,"col":3,"colorIndex":0,"key":13},"2.3":{"row":2,"col":3,"colorIndex":4,"key":14},"3.3":{"row":3,"col":3,"colorIndex":2,"key":15},"0.4":{"row":0,"col":4,"colorIndex":4,"key":16},"1.4":{"row":1,"col":4,"colorIndex":2,"key":17},"2.4":{"row":2,"col":4,"colorIndex":1,"key":18},"3.4":{"row":3,"col":4,"colorIndex":0,"key":19},"0.5":{"row":0,"col":5,"colorIndex":5,"key":20},"1.5":{"row":1,"col":5,"colorIndex":3,"key":21},"2.5":{"row":2,"col":5,"colorIndex":6,"key":22},"3.5":{"row":3,"col":5,"colorIndex":3,"key":23},"0.6":{"row":0,"col":6,"colorIndex":5,"key":24},"1.6":{"row":1,"col":6,"colorIndex":2,"key":25},"2.6":{"row":2,"col":6,"colorIndex":1,"key":26},"3.6":{"row":3,"col":6,"colorIndex":6,"key":27}},"numColors":7,"tubeHeight":4,"numEmptyTube":2},
-    {"gameState":{"0.0":{"row":0,"col":0,"colorIndex":1,"key":0},"1.0":{"row":1,"col":0,"colorIndex":1,"key":1},"2.0":{"row":2,"col":0,"colorIndex":2,"key":2},"3.0":{"row":3,"col":0,"colorIndex":2,"key":3},"4.0":{"row":4,"col":0,"colorIndex":0,"key":4},"5.0":{"row":5,"col":0,"colorIndex":2,"key":5},"0.1":{"row":0,"col":1,"colorIndex":0,"key":6},"1.1":{"row":1,"col":1,"colorIndex":2,"key":7},"2.1":{"row":2,"col":1,"colorIndex":0,"key":8},"3.1":{"row":3,"col":1,"colorIndex":2,"key":9},"4.1":{"row":4,"col":1,"colorIndex":1,"key":10},"5.1":{"row":5,"col":1,"colorIndex":2,"key":11},"0.2":{"row":0,"col":2,"colorIndex":1,"key":12},"1.2":{"row":1,"col":2,"colorIndex":1,"key":13},"2.2":{"row":2,"col":2,"colorIndex":0,"key":14},"3.2":{"row":3,"col":2,"colorIndex":0,"key":15},"4.2":{"row":4,"col":2,"colorIndex":0,"key":16},"5.2":{"row":5,"col":2,"colorIndex":1,"key":17}},"numColors":3,"tubeHeight":6,"numEmptyTube":2},
+    {"gameState":{"0.0":{"row":0,"col":0,"colorIndex":0,"key":0},"1.0":{"row":1,"col":0,"colorIndex":1,"key":1},"2.0":{"row":2,"col":0,"colorIndex":3,"key":2},"3.0":{"row":3,"col":0,"colorIndex":2,"key":3},"0.1":{"row":0,"col":1,"colorIndex":1,"key":4},"1.1":{"row":1,"col":1,"colorIndex":3,"key":5},"2.1":{"row":2,"col":1,"colorIndex":0,"key":6},"3.1":{"row":3,"col":1,"colorIndex":2,"key":7},"0.2":{"row":0,"col":2,"colorIndex":0,"key":8},"1.2":{"row":1,"col":2,"colorIndex":2,"key":9},"2.2":{"row":2,"col":2,"colorIndex":1,"key":10},"3.2":{"row":3,"col":2,"colorIndex":3,"key":11},"0.3":{"row":0,"col":3,"colorIndex":1,"key":12},"1.3":{"row":1,"col":3,"colorIndex":3,"key":13},"2.3":{"row":2,"col":3,"colorIndex":2,"key":14},"3.3":{"row":3,"col":3,"colorIndex":0,"key":15}},"numColors":4,"tubeHeight":4,"numEmptyTube":1},
     {"gameState":{"0.0":{"row":0,"col":0,"colorIndex":3,"key":0},"1.0":{"row":1,"col":0,"colorIndex":4,"key":1},"2.0":{"row":2,"col":0,"colorIndex":1,"key":2},"3.0":{"row":3,"col":0,"colorIndex":1,"key":3},"0.1":{"row":0,"col":1,"colorIndex":0,"key":4},"1.1":{"row":1,"col":1,"colorIndex":2,"key":5},"2.1":{"row":2,"col":1,"colorIndex":4,"key":6},"3.1":{"row":3,"col":1,"colorIndex":2,"key":7},"0.2":{"row":0,"col":2,"colorIndex":1,"key":8},"1.2":{"row":1,"col":2,"colorIndex":0,"key":9},"2.2":{"row":2,"col":2,"colorIndex":0,"key":10},"3.2":{"row":3,"col":2,"colorIndex":3,"key":11},"0.3":{"row":0,"col":3,"colorIndex":2,"key":12},"1.3":{"row":1,"col":3,"colorIndex":4,"key":13},"2.3":{"row":2,"col":3,"colorIndex":3,"key":14},"3.3":{"row":3,"col":3,"colorIndex":2,"key":15},"0.4":{"row":0,"col":4,"colorIndex":3,"key":16},"1.4":{"row":1,"col":4,"colorIndex":4,"key":17},"2.4":{"row":2,"col":4,"colorIndex":0,"key":18},"3.4":{"row":3,"col":4,"colorIndex":1,"key":19}},"numColors":5,"tubeHeight":4,"numEmptyTube":2},
     {"gameState":{"0.0":{"row":0,"col":0,"colorIndex":6,"key":0},"1.0":{"row":1,"col":0,"colorIndex":6,"key":1},"2.0":{"row":2,"col":0,"colorIndex":4,"key":2},"3.0":{"row":3,"col":0,"colorIndex":0,"key":3},"0.1":{"row":0,"col":1,"colorIndex":5,"key":4},"1.1":{"row":1,"col":1,"colorIndex":0,"key":5},"2.1":{"row":2,"col":1,"colorIndex":3,"key":6},"3.1":{"row":3,"col":1,"colorIndex":5,"key":7},"0.2":{"row":0,"col":2,"colorIndex":1,"key":8},"1.2":{"row":1,"col":2,"colorIndex":1,"key":9},"2.2":{"row":2,"col":2,"colorIndex":4,"key":10},"3.2":{"row":3,"col":2,"colorIndex":2,"key":11},"0.3":{"row":0,"col":3,"colorIndex":7,"key":12},"1.3":{"row":1,"col":3,"colorIndex":4,"key":13},"2.3":{"row":2,"col":3,"colorIndex":3,"key":14},"3.3":{"row":3,"col":3,"colorIndex":6,"key":15},"0.4":{"row":0,"col":4,"colorIndex":7,"key":16},"1.4":{"row":1,"col":4,"colorIndex":1,"key":17},"2.4":{"row":2,"col":4,"colorIndex":0,"key":18},"3.4":{"row":3,"col":4,"colorIndex":7,"key":19},"0.5":{"row":0,"col":5,"colorIndex":5,"key":20},"1.5":{"row":1,"col":5,"colorIndex":3,"key":21},"2.5":{"row":2,"col":5,"colorIndex":7,"key":22},"3.5":{"row":3,"col":5,"colorIndex":1,"key":23},"0.6":{"row":0,"col":6,"colorIndex":6,"key":24},"1.6":{"row":1,"col":6,"colorIndex":4,"key":25},"2.6":{"row":2,"col":6,"colorIndex":3,"key":26},"3.6":{"row":3,"col":6,"colorIndex":0,"key":27},"0.7":{"row":0,"col":7,"colorIndex":2,"key":28},"1.7":{"row":1,"col":7,"colorIndex":2,"key":29},"2.7":{"row":2,"col":7,"colorIndex":5,"key":30},"3.7":{"row":3,"col":7,"colorIndex":2,"key":31}},"numColors":8,"tubeHeight":4,"numEmptyTube":2},
     {"gameState":{"0.0":{"row":0,"col":0,"colorIndex":5,"key":0},"1.0":{"row":1,"col":0,"colorIndex":0,"key":1},"2.0":{"row":2,"col":0,"colorIndex":7,"key":2},"0.1":{"row":0,"col":1,"colorIndex":1,"key":3},"1.1":{"row":1,"col":1,"colorIndex":7,"key":4},"2.1":{"row":2,"col":1,"colorIndex":1,"key":5},"0.2":{"row":0,"col":2,"colorIndex":0,"key":6},"1.2":{"row":1,"col":2,"colorIndex":4,"key":7},"2.2":{"row":2,"col":2,"colorIndex":3,"key":8},"0.3":{"row":0,"col":3,"colorIndex":2,"key":9},"1.3":{"row":1,"col":3,"colorIndex":2,"key":10},"2.3":{"row":2,"col":3,"colorIndex":6,"key":11},"0.4":{"row":0,"col":4,"colorIndex":2,"key":12},"1.4":{"row":1,"col":4,"colorIndex":5,"key":13},"2.4":{"row":2,"col":4,"colorIndex":3,"key":14},"0.5":{"row":0,"col":5,"colorIndex":0,"key":15},"1.5":{"row":1,"col":5,"colorIndex":5,"key":16},"2.5":{"row":2,"col":5,"colorIndex":1,"key":17},"0.6":{"row":0,"col":6,"colorIndex":6,"key":18},"1.6":{"row":1,"col":6,"colorIndex":6,"key":19},"2.6":{"row":2,"col":6,"colorIndex":7,"key":20},"0.7":{"row":0,"col":7,"colorIndex":4,"key":21},"1.7":{"row":1,"col":7,"colorIndex":3,"key":22},"2.7":{"row":2,"col":7,"colorIndex":4,"key":23}},"numColors":8,"tubeHeight":3,"numEmptyTube":2},
@@ -180,12 +190,13 @@ export const gameLevels = [
 // for(let i = 0; i < gameLevels.length; i++){
 //     console.log(testLevelAbilityToComplete(gameLevels[i].gameState, gameLevels[i].numEmptyTube));
 // }
-
+// console.log(testLevelAbilityToComplete(gameLevels[23].gameState, gameLevels[23].numEmptyTube));
+console.log('Кол-во уровней: ', gameLevels.length);
 export const getLevelInfo = (lvl) => {
     return gameLevels[lvl];
 };
 
-export const moneyPerLevel = 5;
+export const moneyPerLevel = 10;
 
 
 const levelsHints = [
@@ -200,11 +211,27 @@ const levelsHints = [
     'Уровень пройден! В игре вам встретится много уровней разной сложности. Попробуйте пройти все!'
         ]
     ,
-    ['Любой ход можно отменить - нажмите на часы в правом верхнем углу. На этом уровне использование бесплатно.']
+    [
+        'Вы можете отменить ход, нажав на песочные часы в правом верхнем углу',
+        '1 часы = 1 отмена хода. На этом уровне вы можете попробовать отменить ход бесплатно.'
+    ]
 
 ]
 
+
 export function getLevelHints(level, step){
-    return levelsHints[level][step];
+    try{
+        return levelsHints[level][step];
+    }catch(ignored){
+        return ''
+    }
+
 }
 
+export function getLastLevel(){
+    let lastLevel = getFromLocalStorage('lastLevel', 0);
+    if(lastLevel >= gameLevels.length){
+        lastLevel = gameLevels.length-1;
+    }
+    return lastLevel;
+}

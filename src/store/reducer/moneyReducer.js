@@ -7,12 +7,10 @@ if(isNaN(gameMoney)) gameMoney = 15;
 
 export const moneyReducer = (state = gameMoney, action) => {
     if(action.type === SUBTRACT_MONEY){
-        console.log("SuBS");
         const subtract = state - 1;
         localStorage.setItem('gameMoney', String(subtract));
         return subtract;
     }else if(action.type === ADD_MONEY){
-        console.log("ADD MONEY");
         const sum = state + moneyPerLevel;
         localStorage.setItem('gameMoney', String(sum));
         return sum;

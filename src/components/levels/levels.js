@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {chooseLevel} from "../../store/ac";
 import {selectLastLevel, selectSounds} from "../../store/selectors";
 import {Link} from "react-router-dom";
-import {openGameSound} from "../../sounds";
+import {clickSound} from "../../sounds";
 import {gameLevels} from "../../projectCommon";
 
 const gameLevelsLength = gameLevels.length;
@@ -29,6 +29,13 @@ class Levels extends Component {
         this.levelRef = div;
     };
 
+    scrollLevels = (e) => {
+        const delta = -50 * (Math.max(-1, Math.min(1, (e.deltaY || e.wheelDelta || -e.detail))));
+        document.querySelector('.levels').scrollLeft += delta; // Multiplied by 10
+    }
+
+
+
 
     render() {
         let levelList = [];
@@ -43,7 +50,7 @@ class Levels extends Component {
                     return;
                 }
                 this.props.chooseLevel(i);
-                if(this.props.isSounds) openGameSound.play();
+                if(this.props.isSounds) clickSound.play();
             };
             const levelSmall =  i > 99 ? ' levels__level_small' : '';
 
@@ -83,19 +90,14 @@ class Levels extends Component {
             levelList = [[], [], [], [], []];
             for (let i = 0; i < gameLevelsLength; i++) {
                 levelList[k].push(addLevel(i));
-                if(isReverse) k--;
-                else k++;
+                k++
                 if(k === 5) {
-                    k = 4;
-                    isReverse = true;
-                }else if(k === -1){
                     k = 0;
-                    isReverse = false;
                 }
             }
 
             return (
-                <div className={'levels'}>
+                <div className={'levels'}  onWheel={this.scrollLevels}>
                     {levelList.map((levelsLine, i)=>(
                         <div
                             className={'levels__line'}
@@ -114,7 +116,7 @@ class Levels extends Component {
         }
 
         return (
-            <div className={'levels'}>
+            <div className={'levels'} onWheel={this.scrollLevels}>
                 {levelList}
             </div>
         );

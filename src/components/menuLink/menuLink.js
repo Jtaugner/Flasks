@@ -1,7 +1,7 @@
 import React from 'react';
 import './menuLink.scss'
 import {Link} from "react-router-dom";
-import {goMainPageSound} from "../../sounds";
+import {clickSound} from "../../sounds";
 import {connect} from "react-redux";
 import {selectSounds} from "../../store/selectors";
 
@@ -10,7 +10,7 @@ function MenuLink(props) {
     const {isSounds} = props;
     const onClick = () => {
         if(isSounds){
-            goMainPageSound.play();
+            clickSound.play();
         }
     };
     return (

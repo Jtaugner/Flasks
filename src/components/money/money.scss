@@ -19,9 +19,8 @@ $moneyColor: #a95dbc;
   text-align: center;
   font-size: 1.6rem;
   color: $darkFontColor;
-
-
-
+}
+.gamePage .moneyBlock{
   cursor: pointer;
 }
 $leftShift: 7px;
@@ -38,6 +37,33 @@ $leftShift: 7px;
 
   background: url(../../assets/images/money.png) center center no-repeat;
   background-size: 100%;
+}
+
+.moneyBlock__tip{
+  position: absolute;
+  bottom: -58px;
+  right: 0;
+
+  display: none;
+
+  width: 150px;
+  height: 50px;
+
+  padding: 5px;
+  border-radius: 10px;
+
+  font-size: 1.4rem;
+  color: #b56c52;
+
+  border: 1px solid #b56c52;
+
+  background-color: rgba(255, 255, 255, 0.5);
+
+  z-index: 5;
+}
+
+.moneyBlock_game:hover .moneyBlock__tip{
+  display: block;
 }
 
 @media (min-width: 600px) {

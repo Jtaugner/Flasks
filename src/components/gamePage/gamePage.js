@@ -6,15 +6,17 @@ import TopMenu from "../topMenu";
 import MenuLink from "../menuLink/menuLink";
 import Money from "../money/money";
 import {connect} from "react-redux";
-import {selectLastLevel, selectLevel, selectSounds} from "../../store/selectors";
+import {selectGameSDK, selectLastLevel, selectLevel, selectSounds} from "../../store/selectors";
 import GameLevel from "../gameLevel/gameLevel";
 import StartAgainButton from "./startAgainButton/startAgainButton";
-import {getLevelHints, getLevelInfo, testLevelAbilityToComplete} from "../../projectCommon";
+import {getLevelHints, getLevelInfo} from "../../projectCommon";
 import EndGameWindow from "../endGameWindow/endGameWindow";
 import {addMoney, chooseLevel, increaseLastLevel} from "../../store/ac";
 import Hint from "../hint/hint";
-import {ballSound} from "../../sounds";
-import {reachGoal} from "../../App";
+import {ballSound, returnBackSound, sortSound, winSound} from "../../sounds";
+import {giveParams, reachGoal} from "../../App";
+import SkipLevel from "../skipLevel/skipLevel";
+import SkipLevelWindow from "../skipLevelWindow/skipLevelWindow";
 
 
 
@@ -71,7 +73,8 @@ const hashPosition = ({ row, col }) => row + '.' + col;
 // const IS_CREATE_LEVEL = true;
 
 const ignoreBlackoutSteps = [1,2,4,5];
-function testBlackoutHintStep(step){
+function testBlackoutHintStep(step, level){
+    if(level >= 1) return  false;
     return ignoreBlackoutSteps.includes(step);
 }
 
@@ -85,32 +88,77 @@ function GamePage(props) {
     const {
         level, lastLevel,
         addMoney, increaseLastLevel, chooseLevel,
-        isSounds
+        isSounds,
+        gameSDK, showAdv, saveData
     } = props;
 
     let levelInfo = getLevelInfo(level);
-    if(level === 9){reachGoal('level10')}
-    else if(level === 49){reachGoal('level50')}
-    else if(level === 99){reachGoal('level100')}
-    else if(level === 199){reachGoal('level200')}
 
     const [isWin, setIsWin] = useState(false);
     const [isAddMoney, setIsAddMoney] = useState(false);
 
     //Для обучения
     const [isShowHint, setIsShowHint] = useState(false);
+    const [hintMessage, setHintMessage] = useState(false);
+
+
     const [teaching, setTeaching] = useState(false);
     const [teachingStep, changeTeachingStep] = useState(0);
 
+
+    const [isShowSkipWindow, setIsShowSkipWindow] = useState(false);
+
     const [gameState, setGameState] = useState(levelInfo.gameState);
-    const [infoAboutInterface, setInfoAboutInterface] = useState({});
+
+
+
+
 
     let numColors = levelInfo.numColors;
     let tubeHeight = levelInfo.tubeHeight;
     let numEmptyTube = levelInfo.numEmptyTube;
 
+    const getInfo = () => {
+        const info = {};
+        info.tubesAmount = numColors + numEmptyTube;
 
-    const getTeaching = () => {
+        info.tubesInLine = getTubesWidthInLineWithTwoLines(info.tubesAmount);
+        info.nextLineTubeNumber = getNextLineNumberWithTwoLines(info.tubesAmount);
+        info.tubesInFirstLine = info.nextLineTubeNumber;
+        info.tubesInSecondLine = info.tubesAmount - info.tubesInFirstLine;
+        info.flasksWidth = flasksWidth;
+
+        info.tubeWidth = (flasksWidth - spaceBetweenTubes * (info.tubesInLine + 1)) / info.tubesInLine;
+        if(window.innerWidth > 600 && window.innerHeight < 1100 && tubeNumberToDivideLines <= info.tubesAmount &&
+            info.tubeWidth * tubeHeight * 2 > window.innerHeight * 0.6 ){
+
+            info.flasksWidth = window.innerHeight * 0.6;
+            info.tubeWidth = (window.innerHeight * 0.6  - spaceBetweenTubes * (info.tubesInLine + 1)) / info.tubesInLine;
+        }else if(info.tubeWidth * tubeHeight > window.innerHeight * 0.55 && (numColors + numEmptyTube <= 3)){
+            info.flasksWidth = window.innerHeight * 0.5;
+            info.tubeWidth = (window.innerHeight * 0.5  - spaceBetweenTubes * (info.tubesInLine + 1)) / info.tubesInLine;
+        }
+        info.ballWidth = info.tubeWidth - diffBetweenTubeAndBall;
+        info.tubeHeightPx = tubeHeight * info.ballWidth + 10;
+        info.firstLineSpace = 0;
+        info.secondLineSpace = 0;
+
+        if (tubeNumberToDivideLines <= info.tubesAmount) {
+            info.firstLineSpace = (flasksWidth - info.tubesInFirstLine * info.tubeWidth - spaceBetweenTubes * (info.tubesInFirstLine + 2)) / 2;
+            info.secondLineSpace = (flasksWidth - info.tubesInSecondLine * info.tubeWidth - spaceBetweenTubes * (info.tubesInSecondLine + 2)) / 2;
+            if(info.firstLineSpace < 0) info.firstLineSpace = 0;
+            if(info.secondLineSpace < 0) info.secondLineSpace = 0;
+        }
+        info.nextLineTop = info.tubeHeightPx + 50;
+
+        return info;
+    }
+
+    const [infoAboutInterface, setInfoAboutInterface] = useState(getInfo());
+
+
+    const changeLevel = () => {
+        allGameMoves = [];
         if(level <= 1){
             setIsShowHint(true);
         }
@@ -120,9 +168,13 @@ function GamePage(props) {
 
     };
 
-    useEffect(getTeaching, [level]);
 
     const closeHint = () => {
+        setHintMessage(false);
+        if(level === 1 && teachingStep === 0){
+            changeTeachingStep(1);
+            return;
+        }
         if(level >= 1) setIsShowHint(false);
         if(testBlackoutHintStep(teachingStep)) return;
 
@@ -236,7 +288,6 @@ function GamePage(props) {
     const [highNode, setHighNode] = useState(null);
 
     useEffect(()=>{
-        console.log('testWin');
         testWin();
     }, [gameState])
 
@@ -258,9 +309,11 @@ function GamePage(props) {
         const firstNode = colNodes[0];
         const node = gameState[selectedNode];
 
-        if(isSounds){
+
+        if(isSounds && (node || firstNode)){
             ballSound.play();
         }
+
 
         if (node) {
             if (node.col === col) {
@@ -286,10 +339,15 @@ function GamePage(props) {
                 }
                 setTimeout(() => {
                     setHighNode(null);
-                }, 200);
+                }, 100);
 
 
             } else {
+                if(level > 0 && level < 4){
+                    changeTeachingStep(100);
+                    setIsShowHint(true);
+                    setHintMessage('Шар можно переместить либо в пустую колбу, либо на шар такого же цвета.');
+                }
                 setHighNode(null);
             }
             setSelectedNode(null);
@@ -328,41 +386,11 @@ function GamePage(props) {
 
 
 
-
     useEffect(() => {
-        console.log('Пересчёт');
+        changeLevel();
+        showAdv();
 
-        const info = {};
-        info.tubesAmount = numColors + numEmptyTube;
-
-        info.tubesInLine = getTubesWidthInLineWithTwoLines(info.tubesAmount);
-        info.nextLineTubeNumber = getNextLineNumberWithTwoLines(info.tubesAmount);
-        info.tubesInFirstLine = info.nextLineTubeNumber;
-        info.tubesInSecondLine = info.tubesAmount - info.tubesInFirstLine;
-
-        info.tubeWidth = (flasksWidth - spaceBetweenTubes * (info.tubesInLine + 1)) / info.tubesInLine;
-        console.log(info.tubeWidth);
-        console.log(info.tubeWidth * tubeHeight * 2);
-        if(window.innerWidth > 600 && window.innerHeight < 1100 && tubeNumberToDivideLines <= info.tubesAmount &&
-            info.tubeWidth * tubeHeight * 2 > window.innerHeight * 0.6 ){
-            info.tubeWidth = (window.innerHeight * 0.6  - spaceBetweenTubes * (info.tubesInLine + 1)) / info.tubesInLine;
-        }
-        console.log(info.tubeWidth);
-        info.ballWidth = info.tubeWidth - diffBetweenTubeAndBall;
-        info.tubeHeightPx = tubeHeight * info.ballWidth + 10;
-        info.firstLineSpace = 0;
-        info.secondLineSpace = 0;
-        if (tubeNumberToDivideLines <= info.tubesAmount) {
-            info.firstLineSpace = (flasksWidth - info.tubesInFirstLine * info.tubeWidth - spaceBetweenTubes * (info.tubesInFirstLine + 2)) / 2;
-            info.secondLineSpace = (flasksWidth - info.tubesInSecondLine * info.tubeWidth - spaceBetweenTubes * (info.tubesInSecondLine + 2)) / 2;
-            if(info.firstLineSpace < 0) info.firstLineSpace = 0;
-            if(info.secondLineSpace < 0) info.secondLineSpace = 0;
-        }
-        info.nextLineTop = info.tubeHeightPx + 50;
-        console.log(info);
-
-        setInfoAboutInterface(info);
-
+        setInfoAboutInterface(getInfo());
     }, [level])
 
 
@@ -387,14 +415,14 @@ function GamePage(props) {
 
     const getTubeLeft = (col) => {
         if(col < infoAboutInterface.nextLineTubeNumber){
-            return col * infoAboutInterface.tubeWidth + spaceBetweenTubes*(col+1) + infoAboutInterface.firstLineSpace
+            return col * infoAboutInterface.tubeWidth + spaceBetweenTubes*(col+1) + infoAboutInterface.firstLineSpace;
         }
         return (col-infoAboutInterface.nextLineTubeNumber) * infoAboutInterface.tubeWidth + spaceBetweenTubes*(col-infoAboutInterface.nextLineTubeNumber+1) + infoAboutInterface.secondLineSpace
     };
 
     const getBallLeft = (col) => {
         if(col < infoAboutInterface.nextLineTubeNumber){
-            return col * infoAboutInterface.tubeWidth + spaceBetweenTubes*(col+1) + diffBetweenTubeAndBall/2 + infoAboutInterface.firstLineSpace
+            return col * infoAboutInterface.tubeWidth + spaceBetweenTubes*(col+1) + diffBetweenTubeAndBall/2 + infoAboutInterface.firstLineSpace;
         }
         return (col-infoAboutInterface.nextLineTubeNumber) * infoAboutInterface.tubeWidth + spaceBetweenTubes*(col-infoAboutInterface.nextLineTubeNumber+1) + diffBetweenTubeAndBall/2 + infoAboutInterface.secondLineSpace
     };
@@ -409,7 +437,15 @@ function GamePage(props) {
 
     const startAgain = () => {
         if(level === 0) return;
+        allGameMoves = [];
+        if(isSounds){
+            sortSound.play();
+        }
+        setSelectedNode(null);
+        setHighNode(null);
         setGameState(levelInfo.gameState);
+
+        showAdv();
     }
 
     const testWin = () => {
@@ -418,25 +454,40 @@ function GamePage(props) {
         for(let i = 0; i < balls.length; i++){
             let ballState = gameState[balls[i]];
             if(ballsInTubes[ballState.colorIndex] !== undefined){
-                if(ballsInTubes[ballState.colorIndex] !== ballState.col) return;
+                if(ballsInTubes[ballState.colorIndex] !== ballState.col) return false;
             }else{
                 ballsInTubes[ballState.colorIndex] = ballState.col;
             }
         }
         //Выиграть уровень
+        console.log("WON");
+
         if(teaching && teachingStep === 7 && isTeach) {
             setIsShowHint(true);
             return;
         }
 
         setIsWin(true);
+        if(isSounds){
+            winSound.play();
+        }
+
         if(level === lastLevel) {
-            increaseLastLevel(lastLevel+1);
+            const newLevel = lastLevel + 1;
+            increaseLastLevel(newLevel);
             setIsAddMoney(true);
             addMoney();
+
+            if(newLevel === 9){reachGoal('level10')}
+            else if(newLevel === 49){reachGoal('level50')}
+            else if(newLevel === 99){reachGoal('level100')}
+            else if(newLevel === 199){reachGoal('level200')}
+            saveData();
         }else{
             setIsAddMoney(false);
         }
+
+
     }
 
     const nextGame = () => {
@@ -451,6 +502,8 @@ function GamePage(props) {
         numColors = levelInfo.numColors;
         tubeHeight = levelInfo.tubeHeight;
         numEmptyTube = levelInfo.numEmptyTube;
+
+        showAdv();
 
         setIsWin(false)
     }
@@ -480,6 +533,10 @@ function GamePage(props) {
         newState[lastMove[0]] = lastMove[1];
 
         setGameState(newState);
+
+        if(isSounds){
+            returnBackSound.play();
+        }
 
     }
 
@@ -511,7 +568,30 @@ function GamePage(props) {
     }
 
     const getBlackoutClasses = () => {
-        return "blackout hintBlackout " + (testBlackoutHintStep(teachingStep) ? 'hintBlackout_noPointers' : '');
+        return "blackout hintBlackout " + (testBlackoutHintStep(teachingStep, level) ? 'hintBlackout_noPointers' : '');
+    }
+
+    const skipLevel = () => {
+        try{
+            gameSDK.adv.showRewardedVideo({
+                callbacks: {
+                    onRewarded: () => {
+                        console.log('rewarded');
+                        giveParams({'skipLevel': lastLevel});
+                        increaseLastLevel(lastLevel+1);
+                        setIsShowSkipWindow(false);
+                        setIsAddMoney(false);
+                        setIsWin(true);
+                    }
+                }
+            });
+        }catch(e){console.log(e);}
+
+    }
+
+
+    const changeSkipLevel = () => {
+        setIsShowSkipWindow(!isShowSkipWindow);
     }
 
     return (
@@ -533,13 +613,13 @@ function GamePage(props) {
                 <div
                     className={'gamePage__tubes ' + (tubeNumberToDivideLines <= infoAboutInterface.tubesAmount ? 'gamePage__tubes_twoLines' : '')}
                     style={{
-                        width: flasksWidth,
+                        width: infoAboutInterface.flasksWidth,
                         height: getTubesBlockHeight()
                     }}
                 >
 
                     {isShowHint ? <Hint
-                        message={getLevelHints(level, teachingStep)}
+                        message={hintMessage || getLevelHints(level, teachingStep)}
                         isBottomHint={teachingStep === 2 || teachingStep === 5}
                     /> : ''}
 
@@ -602,6 +682,9 @@ function GamePage(props) {
                     ))}
                 </div>
 
+                {lastLevel === level ? <SkipLevel onClick={changeSkipLevel} /> : ''}
+                {isShowSkipWindow ? <SkipLevelWindow closeWindow={changeSkipLevel} skipLevel={skipLevel}/> : ''}
+
 
                 {isWin?
                     <EndGameWindow
@@ -617,7 +700,8 @@ export default connect(
     (store)=>({
         level: selectLevel(store),
         lastLevel: selectLastLevel(store),
-        isSounds: selectSounds(store)
+        isSounds: selectSounds(store),
+        gameSDK: selectGameSDK(store)
     }),
     (dispatch)=>({
         chooseLevel: (level) => dispatch(chooseLevel(level)),

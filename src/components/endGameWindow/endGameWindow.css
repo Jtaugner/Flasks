@@ -1,5 +1,4 @@
 .endGame {
-  height: 260px;
   width: 90%;
 }
 
@@ -8,6 +7,7 @@
   font-size: 2.5rem;
   margin-top: 30px;
   color: #c88064;
+  margin-bottom: 10px;
 }
 
 .endGame__prizeMoney {
@@ -28,11 +28,9 @@
 }
 
 .endGame__actions {
-  position: absolute;
   width: 100%;
   height: 50px;
-  left: 0;
-  bottom: 10px;
+  margin-bottom: 10px;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -50,6 +48,11 @@
   cursor: pointer;
 }
 
+.endGame__text {
+  font-size: 1.6rem;
+  padding: 10px;
+}
+
 .endGame .popUp__header {
   color: #c88064;
 }
@@ -57,7 +60,6 @@
 @media (min-width: 600px) {
   .endGame {
     width: 550px;
-    height: 300px;
   }
 
   .endGame .popUp__header {
@@ -81,6 +83,11 @@
   .endGame__actions .menu {
     width: 50px;
     height: 50px;
+  }
+
+  .endGame__text {
+    font-size: 2rem;
+    padding: 10px;
   }
 }
 

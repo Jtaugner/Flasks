@@ -27,14 +27,14 @@
 .gamePage__tube {
   position: absolute;
   border-radius: 0 0 20px 20px;
-  transition: all ease 0.2s;
+  transition: all ease 0.1s;
   border: 2px #292828 solid;
   border-top: none;
 }
 
 .gamePage__tube_top {
   position: absolute;
-  transition: all ease 0.2s;
+  transition: all ease 0.1s;
   border: 2px #292828 solid;
 }
 
@@ -50,7 +50,7 @@
 
 .gamePage__ball {
   position: absolute;
-  transition: all ease 0.2s;
+  transition: all ease 0.1s;
   border: 2px #292828 solid;
   pointer-events: none;
   border-radius: 50%;
@@ -98,12 +98,12 @@
 }
 @media (min-height: 800px) {
   .gamePage__tubes {
-    margin: auto auto 80px auto;
-    margin: auto auto 20vh auto;
+    margin: auto auto 20px auto;
+    margin: auto auto 10vh auto;
   }
 
   .gamePage__tubes_twoLines {
-    margin: auto auto 45px auto;
+    margin: auto auto 20px auto;
     margin: auto auto 5vh auto;
   }
 }

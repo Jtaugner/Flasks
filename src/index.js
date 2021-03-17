@@ -25,7 +25,7 @@ function getState() {
     }
 }
 
-let advTime;
+let advTime = true;
 let showAdv;
 
 // Сохранение данных в аккаунт пользователя Яндекса
@@ -105,6 +105,7 @@ if (window.YaGames) {
 
                 showAdv = () => {
                     if(!advTime) return;
+                    console.log('Show adv');
                     ysdk.adv.showFullscreenAdv({
                         callbacks: {
                             onClose: function() {

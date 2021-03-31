@@ -23,8 +23,18 @@ export const isPhone = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera
 // function findAllPossibleMoves(arr){
 //     let moves = [];
 //     for(let i = 0; i < arr.length; i++){
+//
 //         let color;
 //         let index;
+//         let firstColor = arr[i][0];
+//         let isExit = true;
+//         for(let q = 1; q < arr[i].length; q++){
+//             if(arr[i][q] !== firstColor){
+//                 isExit = false;
+//                 break;
+//             }
+//         }
+//         if(isExit) continue;
 //         for(let q = 0; q < arr[i].length; q++){
 //             if(arr[i][q] !== null){
 //                 index = q;
@@ -137,7 +147,7 @@ export const isPhone = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera
 //         // console.log("RESULT: ", res);
 //         console.log("DASDвфыв");
 //         console.log(movesWin);
-//         return canCompleteLevel;
+//         return movesWin;
 //     }catch(e){
 //         return false;
 //     }
@@ -190,7 +200,7 @@ export const gameLevels = [
 // for(let i = 0; i < gameLevels.length; i++){
 //     console.log(testLevelAbilityToComplete(gameLevels[i].gameState, gameLevels[i].numEmptyTube));
 // }
-// console.log(testLevelAbilityToComplete(gameLevels[23].gameState, gameLevels[23].numEmptyTube));
+console.log(gameLevels[30].gameState, gameLevels[30].numEmptyTube);
 console.log('Кол-во уровней: ', gameLevels.length);
 export const getLevelInfo = (lvl) => {
     return gameLevels[lvl];

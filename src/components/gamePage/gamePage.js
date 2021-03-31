@@ -9,7 +9,7 @@ import {connect} from "react-redux";
 import {selectGameSDK, selectLastLevel, selectLevel, selectSounds} from "../../store/selectors";
 import GameLevel from "../gameLevel/gameLevel";
 import StartAgainButton from "./startAgainButton/startAgainButton";
-import {getLevelHints, getLevelInfo} from "../../projectCommon";
+import {gameLevels, getLevelHints, getLevelInfo, testLevelAbilityToComplete} from "../../projectCommon";
 import EndGameWindow from "../endGameWindow/endGameWindow";
 import {addMoney, chooseLevel, increaseLastLevel} from "../../store/ac";
 import Hint from "../hint/hint";
@@ -374,6 +374,20 @@ function GamePage(props) {
         testWin();
 
     };
+    // const solveLevel = () => {
+    //     const moves = testLevelAbilityToComplete(gameLevels[level].gameState, gameLevels[30].numEmptyTube);
+    //     for(let i = 0; i < moves.length; i++){
+    //         setTimeout(()=>{
+    //             document.querySelectorAll('.gamePage__tube')[moves[i][0][0]].click()
+    //             setTimeout(()=>{
+    //                 document.querySelectorAll('.gamePage__tube')[moves[i][1][0]].click()
+    //             }, 400);
+    //         }, i * 700 + 5000)
+    //
+    //     }
+    //
+    //
+    // };
 
 
 
@@ -391,6 +405,7 @@ function GamePage(props) {
         showAdv();
 
         setInfoAboutInterface(getInfo());
+        // solveLevel();
     }, [level])
 
 

@@ -70,7 +70,7 @@ window.onresize = () => {
 const hashPosition = ({ row, col }) => row + '.' + col;
 
 
-// const IS_CREATE_LEVEL = true;
+const IS_CREATE_LEVEL = true;
 
 const ignoreBlackoutSteps = [1,2,4,5];
 function testBlackoutHintStep(step, level){
@@ -259,22 +259,29 @@ function GamePage(props) {
     //
     //
     // };
+    //
+    // const getRandEmpty = () => {
+    //     let rand = Math.random();
+    //     if(rand > 0.7) return 2;
+    //     return 1;
+    // }
     // if(IS_CREATE_LEVEL){
     //
-    //     for(let i = 0; i < 99; i++){
-    //         numColors = Math.floor(Math.random() * 7) + 4;
+    //     for(let i = 0; i < 200; i++){
+    //         numColors = Math.floor(Math.random() * 4) + 8;
     //         tubeHeight = 4;
-    //         numEmptyTube = 2;
+    //         numEmptyTube = getRandEmpty();
+    //         if(numColors === 11) numEmptyTube = 1;
     //         // if(numColors < 5){
     //         //     tubeHeight = 4;
     //         //     numEmptyTube = 1;
     //         // }
-    //         console.log('num: ', numColors);
+    //         // console.log('num: ', numColors);
     //         createLevel();
     //     }
     // }
     //
-    // localStorage.setItem('allLevelsTubes', JSON.stringify(levels));
+    // localStorage.setItem('allLevelsTubes', JSON.stringify(levels).slice(1));
 
     // useEffect(createLevel, [numColors, tubeHeight, numEmptyTube]);
     //Конец создания уровня

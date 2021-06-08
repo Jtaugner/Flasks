@@ -194,9 +194,9 @@ function GamePage(props) {
 
     //Отладка - создание уровня - комментировать перед продом
     // if(IS_CREATE_LEVEL){
-    //     numColors = 4;
-    //     tubeHeight = 5;
-    //     numEmptyTube = 1;
+    //     // numColors = 4;
+    //     // tubeHeight = 5;
+    //     // numEmptyTube = 1;
     // }
     //
     //
@@ -253,7 +253,7 @@ function GamePage(props) {
     //         // setGameState(state);
     //         // setSelectedNode(null);
     //     }else{
-    //         console.log("BAD LEVEL");
+    //         // console.log("BAD LEVEL: ", state, numColors, tubeHeight, numEmptyTube);
     //         createLevel();
     //     }
     //
@@ -262,15 +262,17 @@ function GamePage(props) {
     //
     // const getRandEmpty = () => {
     //     let rand = Math.random();
-    //     if(rand > 0.7) return 2;
-    //     return 1;
+    //     if(rand > 0.7) return 1;
+    //     return 2;
     // }
     // if(IS_CREATE_LEVEL){
-    //
-    //     for(let i = 0; i < 200; i++){
-    //         numColors = Math.floor(Math.random() * 4) + 8;
+    //     for(let i = 0; i < 100; i++){
+    //         console.log('i:', i);
+    //         numColors = Math.floor(Math.random() * 5) + 7; // 6 6
+    //         // tubeHeight = Math.random() > 0.35 ? 4 : 3;
     //         tubeHeight = 4;
     //         numEmptyTube = getRandEmpty();
+    //         if(numColors === 10) numEmptyTube = 2;
     //         if(numColors === 11) numEmptyTube = 1;
     //         // if(numColors < 5){
     //         //     tubeHeight = 4;
